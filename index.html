@@ -84,11 +84,15 @@
             if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
                 layer.bringToFront();
             }
+            
+            info.update(layer.feature.properties);
         }
         
         //resets highlight
         function resetHighlight(e) {
             catchment.resetStyle(e.target);
+            
+            info.update();
         }
         
         //zoom to feature
@@ -120,7 +124,20 @@
             onEachFeature: onEachFeature
         }).addTo(map);
         
+        //set up info pane
+        var info = L.control();
         
+        info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info');
+            this.update();
+            return this._div;
+        };
+        
+        info.update = function (props) {
+            this._div.innerHTML = '<h4>Mean Advantage/Disadvantage</h4>' + (props ? '<b>' + props.School_Nam + '</b><br />' + props.meanad_Score : 'Hover over a catchment area');
+        }
+        
+        info.addTo(map);
             
 
     </script>
